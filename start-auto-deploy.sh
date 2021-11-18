@@ -22,11 +22,11 @@ chmod +x server-update.sh
 cecho "GREEN" "3. =================>  Installing NVM"
 chmod +x nvm-install.sh
 ./nvm-install.sh
-reboot
+reboot # must restart the machine, if not NVM not gonna work
 
 cecho "GREEN" "4. =================>  Installing Node.js from NVM"
 chmod +x node-install.sh
-./node-install.sh
+./node-install.sh # You have to install manually nvm install --lts
 
 cecho "GREEN" "5. =================>  Installing MongoDB"
 chmod +x mongo-db-install.sh

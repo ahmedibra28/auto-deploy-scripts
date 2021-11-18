@@ -1,12 +1,12 @@
 mkdir '/home/server_logs'
 touch '/home/server_logs/host.access.log'
 SERVER_LOGS='/home/server_logs/host.access.log'
-PROXY_PASS='http://127.0.0.1:3000'
+PROXY_PASS='"http://127.0.0.1:3000"'
 NGINX_DOMAIN='example'
 DOMAIN='ahmaat.tk'
 
 SIGN_DOLLAR='$'
-REMOTE_ADD='remote_add'
+REMOTE_ADD='remote_addr'
 HTTP_HOST='http_host'
 HTTP_UPGRADE='http_upgrade'
 HOST='host'
@@ -14,8 +14,6 @@ HOST='host'
 printf "
 server {
     #listen       80;
-    listen 80 default_server;
-    listen [::]:80 default_server;
     server_name  $DOMAIN www.$DOMAIN;
 
     access_log $SERVER_LOGS;
