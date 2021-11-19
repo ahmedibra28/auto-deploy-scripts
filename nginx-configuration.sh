@@ -45,5 +45,7 @@ server {
 " >>"/etc/nginx/sites-available/$NGINX_DOMAIN"
 
 sudo systemctl restart nginx
+rm /etc/nginx/sites-available/default
+rm /etc/nginx/sites-enabled/default
 sudo ln -s /etc/nginx/sites-available/$NGINX_DOMAIN /etc/nginx/sites-enabled/
 sudo systemctl restart nginx
