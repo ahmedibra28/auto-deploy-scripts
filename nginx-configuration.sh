@@ -5,11 +5,10 @@ PROXY_PASS='"http://127.0.0.1:3000"'
 NGINX_DOMAIN='example'
 DOMAIN='ahmaat.tk'
 
-SIGN_DOLLAR='$'
-REMOTE_ADD='remote_addr'
-HTTP_HOST='http_host'
-HTTP_UPGRADE='http_upgrade'
-HOST='host'
+REMOTE_ADDR='$remote_addr'
+HTTP_HOST='$http_host'
+HTTP_UPGRADE='$http_upgrade'
+HOST='$host'
 
 printf "
 server {
@@ -20,14 +19,14 @@ server {
 
 
     location / {
-        proxy_set_header   X-Forwarded-For $SIGN_DOLLAR$REMOTE_ADD;
-        proxy_set_header   Host $SIGN_DOLLAR$HTTP_HOST;
+        proxy_set_header   X-Forwarded-For $REMOTE_ADDR;
+        proxy_set_header   Host $HTTP_HOST;
         proxy_pass         "$PROXY_PASS";
         proxy_http_version 1.1;
-        proxy_set_header Upgrade $SIGN_DOLLAR$HTTP_UPGRADE;
+        proxy_set_header Upgrade $HTTP_UPGRADE;
         proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $SIGN_DOLLAR$HOST;
-        proxy_cache_bypass $SIGN_DOLLAR$HTTP_UPGRADE;
+        proxy_set_header Host $HOST;
+        proxy_cache_bypass $HTTP_UPGRADE;
 
     }
     error_page   500 502 503 504  /50x.html;
