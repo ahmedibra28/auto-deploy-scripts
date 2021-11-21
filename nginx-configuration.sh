@@ -1,7 +1,8 @@
 mkdir '/home/server_logs'
 touch '/home/server_logs/host.access.log'
+
 SERVER_LOGS='/home/server_logs/host.access.log'
-PROXY_PASS='"http://127.0.0.1:3000"'
+PROXY_PORT='"http://127.0.0.1:3000"'
 NGINX_DOMAIN='example'
 DOMAIN='ahmaat.tk'
 
@@ -21,7 +22,7 @@ server {
     location / {
         proxy_set_header   X-Forwarded-For $REMOTE_ADDR;
         proxy_set_header   Host $HTTP_HOST;
-        proxy_pass         "$PROXY_PASS";
+        proxy_pass         "http://127.0.0.1:$PROXY_PORT";
         proxy_http_version 1.1;
         proxy_set_header Upgrade $HTTP_UPGRADE;
         proxy_set_header Connection 'upgrade';
