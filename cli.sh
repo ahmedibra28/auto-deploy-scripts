@@ -81,7 +81,7 @@ while [ -z "$MONGO_DB_NAME" ]; do
 done
 
 # INSTALLING MONGO
-if [ ! -f "$HOME/.mongorc.js" ]; then
+if [ ! -e "$HOME/.mongorc.js" ]; then
     cecho "GREEN" "6. ================>  Installing Mongo DB"
     wget -qO - https://www.mongodb.org/static/pgp/server-$MONGO_DB_VERSION.asc | sudo apt-key add -
     echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/$MONGO_DB_VERSION multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-$MONGO_DB_VERSION.list
@@ -97,7 +97,7 @@ if [ ! -f "$HOME/.mongorc.js" ]; then
     echo "mongodb-org-mongos hold" | sudo dpkg --set-selections
     echo "mongodb-org-tools hold" | sudo dpkg --set-selections
 
-    if [ ! -f "$HOME/.mongorc.js" ]; then
+    if [ ! -e "$HOME/.mongorc.js" ]; then
         cecho "RED" "================> Sorry, we can't install Mongo DB, please install it mannually by typing <sudo apt-get install -y mongodb-org && sudo systemctl start mongod.service && sudo systemctl enable mongod> and re-run the script again"
         exit
     fi
@@ -141,8 +141,8 @@ while [ -z "$PROXY_PORT" ]; do
         cecho "RED" "================> Please, enter your proxy port"
     fi
 done
-
-printf "
+if [ ! -d "/etc/nginx/sites-available/$NGINX_DOMAIN" ]; then
+    printf "
 server {
     #listen       80;
     server_name  $DOMAIN www.$DOMAIN;
@@ -174,6 +174,7 @@ server {
 
 }
 " >>"/etc/nginx/sites-available/$NGINX_DOMAIN"
+fi
 
 sudo systemctl restart nginx
 if [ ! -d "/etc/nginx/sites-available/default" ]; then
@@ -193,7 +194,6 @@ mv "$GITHUB_PROJECT_NAME" "./home/$PROJECT_DIR"
 cd "/home/$PROJECT_DIR"
 
 cecho "GREEN" "11. =================> Create env variables to /home/DIMS/.env"
-cd /home/$PROJECT_DIR
 printf "NODE_ENV=production 
 MONGO_URI=mongodb://localhost:27017/$MONGO_DB_NAME
 JWT_TOKEN=mom&dad" >>"./.env"
