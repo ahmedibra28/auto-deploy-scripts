@@ -1,22 +1,26 @@
 # Auto Deploy Script
 
-These scripts will help you to deploy your node.js based project to cloud e.g. <digitalocean.com>.
+These scripts will help you to deploy your node.js based project to cloud e.g. <digitalocean.com> within **10 minutes**.
 
-Each script depends on other script.
+You have two options:
 
-Start running from `start-auto-deploy.sh`
+- You can copy and paste `deploy.sh` script into your server e.g. `/root`
+- Start from your computer without copying and pasting anything. Update `starter.sh` replace `<host-ip>` to your new Host IP and Run `starter.sh` from your local computer.
 
-Copy the following code to your remote terminal.
-
-```shell
-chmod +x ./start-auto-deploy.sh
-./start-auto-deploy.sh
-```
-
-At **Step 3**, it will go restart the whole machine to pickup installed NVM.
-
-install node.js manually.
+If you got a permission error
 
 ```shell
-nvm install -lts
+chmod +x ./starter.sh
+./starter.sh
 ```
+
+or
+
+```shell
+chmod +x ./deploy.sh
+./deploy.sh
+```
+
+**NB** during deployment it will ask you a questions please answer all as it's.
+
+Feel free to ask me any help if you need

@@ -27,14 +27,14 @@ sudo apt update
 sudo apt upgrade
 
 # INSTALLING NVM
-if [ ! -d "$HOME/.nvm" ]; then
+if [ ! -d "/root/.nvm" ]; then
     cecho "GREEN" "2. ================>  We're trying to install NVM, please bear with us"
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v$NVM_VERSION/install.sh | bash
     cecho "YELLOW" "================> NVM installed successfully, please reboot your machine and re-run the script again"
 fi
 
 # INSTALLING NODE.JS
-if [ ! "/root/.nvm/versions/node" ]; then
+if [ ! -d "/root/.nvm/versions/node" ]; then
     cecho "GREEN" "3. ================>  We're trying to install NODE.JS"
 
     . ~/.nvm/nvm.sh
@@ -42,15 +42,20 @@ if [ ! "/root/.nvm/versions/node" ]; then
     . ~/.bashrc
 
     nvm install $NODE_VERSION
-    if [ ! "/root/.nvm/versions/node" ]; then
+    if [ ! -d "/root/.nvm/versions/node" ]; then
         cecho "RED" " ================>  Sorry, we can't install NODE.JS, please install it mannually by typing <nvm install --lts> and re-run the script again"
         exit
     fi
 fi
 
 # INSTALLING PM2
-if [ ! -d "$HOME/.pm2" ]; then
+if [ ! -d "/root/.pm2" ]; then
     cecho "GREEN" "4. ================>  We're trying to install PM2"
+
+    . ~/.nvm/nvm.sh
+    . ~/.profile
+    . ~/.bashrc
+
     npm install pm2@latest -g
 fi
 
@@ -58,7 +63,7 @@ cecho "GREEN" "5. =================>  Getting user's requirements"
 
 # GITHUB_PROJECT_NAME
 while [ -z "$GITHUB_PROJECT_NAME" ]; do
-    read -p "What's your GitHub project URL? " GITHUB_PROJECT_NAME
+    read -p "What's your GitHub project name? " GITHUB_PROJECT_NAME
     if [ -z "$GITHUB_PROJECT_NAME" ]; then
         cecho "RED" "================> Please, enter your github project URL"
     fi
@@ -81,7 +86,7 @@ while [ -z "$MONGO_DB_NAME" ]; do
 done
 
 # INSTALLING MONGO
-if [ ! -e "$HOME/.mongorc.js" ]; then
+if [ "/root/.mongorc.js" != "/root/.mongorc.js" ]; then
     cecho "GREEN" "6. ================>  Installing Mongo DB"
     wget -qO - https://www.mongodb.org/static/pgp/server-$MONGO_DB_VERSION.asc | sudo apt-key add -
     echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/$MONGO_DB_VERSION multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-$MONGO_DB_VERSION.list
@@ -97,7 +102,7 @@ if [ ! -e "$HOME/.mongorc.js" ]; then
     echo "mongodb-org-mongos hold" | sudo dpkg --set-selections
     echo "mongodb-org-tools hold" | sudo dpkg --set-selections
 
-    if [ ! -e "$HOME/.mongorc.js" ]; then
+    if [ "/root/.mongorc.js" != "/root/.mongorc.js" ]; then
         cecho "RED" "================> Sorry, we can't install Mongo DB, please install it mannually by typing <sudo apt-get install -y mongodb-org && sudo systemctl start mongod.service && sudo systemctl enable mongod> and re-run the script again"
         exit
     fi
@@ -186,19 +191,23 @@ fi
 
 if [ ! -d "/home/$PROJECT_DIR" ]; then
     cecho "GREEN" "9. =================> Downloading new files from GitHub"
-    git clone https://github.com/ahmaat19/$GITHUB_PROJECT_NAME.git $
+    cd "/home"
+    git clone https://github.com/ahmaat19/$GITHUB_PROJECT_NAME.git
 fi
 
 cecho "GREEN" "10. =================> Reneming directory to /home/$PROJECT_DIR"
-mv "$GITHUB_PROJECT_NAME" "./home/$PROJECT_DIR"
+mv "/home/$GITHUB_PROJECT_NAME" "/home/$PROJECT_DIR"
 cd "/home/$PROJECT_DIR"
 
-cecho "GREEN" "11. =================> Create env variables to /home/DIMS/.env"
+cecho "GREEN" "11. =================> Create env variables to /home/$PROJECT_DIR/.env"
 printf "NODE_ENV=production 
 MONGO_URI=mongodb://localhost:27017/$MONGO_DB_NAME
 JWT_TOKEN=mom&dad" >>"./.env"
 
-if [ ! -d "$HOME/.pm2" ]; then
+if [ -d "/root/.pm2" ]; then
+    . ~/.nvm/nvm.sh
+    . ~/.profile
+    . ~/.bashrc
     cecho "GREEN" "12. =================> Installing dependencies"
     npm install
 
