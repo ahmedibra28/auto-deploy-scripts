@@ -10,9 +10,9 @@ cecho() {
 }
 
 # Constants
-NVM_VERSION='0.39.0'
+NVM_VERSION='0.39.1'
 NODE_VERSION='--lts'
-MONGO_DB_VERSION='5.0'
+MONGO_DB_VERSION='6.0'
 REMOTE_ADDR='$remote_addr'
 HTTP_HOST='$http_host'
 HTTP_UPGRADE='$http_upgrade'
@@ -119,12 +119,12 @@ if [ ! -d "/etc/nginx" ]; then
 fi
 
 # CONFIGURING NGINX
-if [ ! -d "/home/server_logs" ]; then
+if [ ! -d "/root/server_logs" ]; then
     cecho "GREEN" "8. ================>  Configuring Nginx"
-    mkdir '/home/server_logs'
-    touch '/home/server_logs/host.access.log'
+    mkdir '/root/server_logs'
+    touch '/root/server_logs/host.access.log'
 fi
-SERVER_LOGS='/home/server_logs/host.access.log'
+SERVER_LOGS='/root/server_logs/host.access.log'
 
 while [ -z "$DOMAIN" ]; do
     read -p "What's your domain? e.g. example.com " DOMAIN
@@ -189,20 +189,20 @@ if [ ! -d "/etc/nginx/sites-available/default" ]; then
     sudo systemctl restart nginx
 fi
 
-if [ ! -d "/home/$PROJECT_DIR" ]; then
+if [ ! -d "/root/$PROJECT_DIR" ]; then
     cecho "GREEN" "9. =================> Downloading new files from GitHub"
-    cd "/home"
+    cd "/root"
     git clone https://github.com/ahmaat19/$GITHUB_PROJECT_NAME.git
 fi
 
-cecho "GREEN" "10. =================> Reneming directory to /home/$PROJECT_DIR"
-mv "/home/$GITHUB_PROJECT_NAME" "/home/$PROJECT_DIR"
-cd "/home/$PROJECT_DIR"
+cecho "GREEN" "10. =================> Reneming directory to /root/$PROJECT_DIR"
+# mv "/root/$GITHUB_PROJECT_NAME" "/root/$PROJECT_DIR"
+cd "/root/$GITHUB_PROJECT_NAME"
 
-cecho "GREEN" "11. =================> Create env variables to /home/$PROJECT_DIR/.env"
+cecho "GREEN" "11. =================> Create env variables to /root/$PROJECT_DIR/.env"
 printf "NODE_ENV=production 
 MONGO_URI=mongodb://localhost:27017/$MONGO_DB_NAME
-JWT_TOKEN=mom&dad" >>"./.env"
+JWT_SECRET=djkfjkdsf8dsf8ds7f9ds7g98" >>"./.env"
 
 if [ -d "/root/.pm2" ]; then
     . ~/.nvm/nvm.sh
